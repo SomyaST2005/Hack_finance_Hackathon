@@ -6,6 +6,6 @@
 
 
 MEMBERS
-Somya Shekhar Tiwari - SomyaST2005
-Sarthak Jaiswal - SarthakJa18
-Shreyash Sharma - Shreyash90sin
+*Somya Shekhar Tiwari - SomyaST2005*
+*Sarthak Jaiswal - SarthakJa18*
+*Shreyash Sharma - Shreyash90sin*
