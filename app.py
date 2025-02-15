@@ -1,15 +1,19 @@
 import joblib
 import pandas as pd
 from flask import Flask, request, jsonify
+import logging
 
-# Load the trained fraud detection model
 rf_model = joblib.load("rf_fraud_detection.pkl")
 
-# Get the list of features used during training
 expected_features = rf_model.feature_names_in_
 
-# Initialize Flask app
 app = Flask(__name__)
+
+logging.basicConfig(
+    filename='app.log',
+    level=logging.INFO,      
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 @app.route("/")
 def home():
@@ -18,23 +22,29 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # Get JSON data from request
+ 
         data = request.get_json()
+        logging.info(f"Incoming request data: {data}")
 
-        # Convert input to DataFrame
+        for field in expected_features:
+            if field not in data:
+                error_message = f"Missing field: {field}"
+                logging.error(error_message)
+                return jsonify({"error": error_message}), 400
+
         new_transaction_df = pd.DataFrame([data])
 
-        # Ensure only the expected features are used
         new_transaction_df = new_transaction_df[expected_features]
 
-        # Predict fraud (1) or not fraud (0)
         prediction = rf_model.predict(new_transaction_df)
+        logging.info(f"Prediction result: {prediction[0]}")
 
-        # Return result
         return jsonify({"fraud": bool(prediction[0])})
     
     except Exception as e:
-        return jsonify({"error": str(e)})
+        error_message = f"An error occurred: {str(e)}"
+        logging.error(error_message)
+        return jsonify({"error": error_message}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
