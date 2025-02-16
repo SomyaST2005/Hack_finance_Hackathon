@@ -1,7 +1,9 @@
 # Hack_finance_Hackathon
 *DATASET USED FOR TRAINING* : https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
-
-
+<p></p>
+<p></p>
+<p>**Problem: Increasing fraud in digital transactions leads to major financial losses.
+**</p>
 
 
 
