@@ -22,17 +22,18 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
- 
         data = request.get_json()
         logging.info(f"Incoming request data: {data}")
 
+        print("Received data:", data)  # Debugging step
+
         for field in expected_features:
             if field not in data:
-                error_message = f"Missing field: {field}"
-                logging.error(error_message)
-                return jsonify({"error": error_message}), 400
+                return jsonify({"error": f"Missing field: {field}"}), 400
 
         new_transaction_df = pd.DataFrame([data])
+
+        print("Data before prediction:", new_transaction_df)  # Debugging step
 
         new_transaction_df = new_transaction_df[expected_features]
 
@@ -42,9 +43,8 @@ def predict():
         return jsonify({"fraud": bool(prediction[0])})
     
     except Exception as e:
-        error_message = f"An error occurred: {str(e)}"
-        logging.error(error_message)
-        return jsonify({"error": error_message}), 500
+        logging.error(f"An error occurred: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
